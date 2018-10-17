@@ -4,9 +4,13 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -31,6 +35,17 @@ public class Reservation implements Serializable  {
 	@Temporal(TemporalType.TIMESTAMP)
 	@CreatedDate
 	private Date startTime;
+	
+	@OneToOne
+    @JoinColumn(name = "flightName")
+    private Flight flight;
+	
+	public Flight getFlight() {
+		return flight;
+	}
+	public void setFlight(Flight flight) {
+		this.flight = flight;
+	}
 	public String getReservationId() {
 		return reservationId;
 	}

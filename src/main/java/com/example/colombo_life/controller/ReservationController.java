@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.colombo_life.model.Passenger;
 import com.example.colombo_life.model.Reservation;
+import com.example.colombo_life.repository.FlightRepository;
 import com.example.colombo_life.repository.PassengerRepository;
 import com.example.colombo_life.repository.ReservationRepository;
 
@@ -23,26 +24,18 @@ public class ReservationController {
 	private ReservationRepository reservationRepository;
 	
 	@Autowired
-	private PassengerRepository passengerRepository;
+	private FlightRepository flightRepository;
 	
 	@GetMapping("/reservation")
 	public List<Reservation> getAllFlightsShedules() {
 		return reservationRepository.findAll();
 	}
-	@PostMapping("/reservation")
-	public void createFlightShedule(@RequestBody Reservation reservation) {
-	     reservationRepository.save(reservation);
-	}
-	//private Optional<Reservation> findById;
-	
-	@PostMapping("/reservation/{reservation_id}/passenger")
-	public void bookingFlight(@PathVariable String reservation_id,@RequestBody Passenger passenger) {
-		  	reservationRepository.findById(reservation_id).map(reservation -> {
-		 		  	passenger.setReservation(reservation);
-		 			return passengerRepository.save(passenger);
-		 		});	
-		 	//passenger.setReservation(findById);
-		 	//passengerRepository.save(passenger);
+	@PostMapping("/flight/{flight_id}/reservation")
+	public void createFlightShedule(@PathVariable String flight_id,@RequestBody Reservation reservation) {
+		flightRepository.findById(flight_id).map(flight -> { // get the Flight object which flight_id == given flight_id, Then mention mapping in foreign key table 
+			reservation.setFlight(flight); // Inject the object to reservation object
+			return reservationRepository.save(reservation); // Save the reservation object
+		});
 	}
 }
 /*
